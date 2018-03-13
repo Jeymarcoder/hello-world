@@ -85,3 +85,20 @@ System Programs:
 • Background services. 
 
 Mechanisms determine how to do something; policies determine what will be done.
+
+用高级语言写操作系统可移植性高好写代码还易于维护(汇编逐渐被抛弃)
+The only possible disadvantages of implementing an operating system in a
+higher-level language are reduced speed and increased storage requirements.
+
+major performance improvements in operating systems are more likely to be the result of better data structures and algorithms than of excellent assembly-language code.
+
+The major difficulty with the layered approach involves appropriately
+defining the various layers. Because a layer can use only lower-level layers, careful planning is necessary.
+分层系统最大的槽点:
+tend to be lessefficient than other types,每一层调用增大系统开销
+
+Linux also uses loadable kernel modules
+ hybrid systems (most use)
+
+ Summary:
+ System  be classified into several categories: program control, status requests, and I/O requests. 
