@@ -102,3 +102,45 @@ Linux also uses loadable kernel modules
 
  Summary:
  System  be classified into several categories: program control, status requests, and I/O requests. 
+
+第三章
+process:
+
+only one process can be running on any processor at any instant. Many
+processes may be ready and waiting
+Process Control Block:(进程控制块)
+• Process state. The state may be new, ready, running, waiting, terminated
+• Program counter. 
+• CPU registers. 
+• CPU-scheduling information. 
+• Memory-management information
+• Accounting information. --->存储CPU和实时使用的数量,时间限制,进程号等
+• I/O status information.
+PCB是一个仓库来储存进程信息
+Threads:(线程)
+On a system that supports threads(多线程), the PCB is expanded to include
+information for each thread.
+3.2 Process Scheduling
+不停地为CPU切换进程使其一直处于满负荷状态,提高cpu的利用率
+3.2.1 Scheduling Queues:
+job queue(processes)
+ready queue :进程常驻在主存中切准备完成等待被执行的一个进程列表
+device queue:如等待I/O设备请求完成的进程列表(或者别的device)
+3.2.2 Schedulers
+ in a batch system, more processes are submitted than can be executed immediately.
+ so there will be long-term schedulers(用于从磁盘中选取那些多余的进程将其调入主存) and short-term schedulers(选取住存中ready的进程来执行)
+ I/O-bound process (I/O约束进程):花在I/O上的时间大于计算
+A CPU-bound process :相反
+It is
+important that the long-term scheduler select a good process mix of I/O-bound and CPU-bound processes.
+若全部是I/O-bound process,ready queue 会empty,short-term scheduler 没事做 
+全部是CPU-bound process ,I/O queue 会empty.
+分时系统可能只会有较少甚至没有的long-term scheduler而引入一种medium-term scheduler
+3.2.3 context switch
+中断产生时会将context存入pcb,不久后又取出执行
+definition:Switching the CPU to another process requires performing a state save of the current process and a state restore of a different process. This task is known as a context switch 
+交换速度取决于memory speed.
+highly dependent on hardware support.
+
+
+
