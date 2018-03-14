@@ -128,11 +128,12 @@ ready queue :进程常驻在主存中切准备完成等待被执行的一个进�
 device queue:如等待I/O设备请求完成的进程列表(或者别的device)
 3.2.2 Schedulers
  in a batch system, more processes are submitted than can be executed immediately.
- so there will be long-term schedulers(用于从磁盘中选取那些多余的进程将其调入主存) and short-term schedulers(选取住存中ready的进程来执行)
- I/O-bound process (I/O约束进程):花在I/O上的时间大于计算
+ so there will be 
+ long-term schedulers 也称job schedulers(用于从磁盘中选取那些多余的进程将其调入主存) , 
+ short-term schedulers 也称 cpu schedulers(选取主存中ready的进程来执行)
+ I/O-bound process (I/O绑定的进程):花在I/O上的时间大于计算
 A CPU-bound process :相反
-It is
-important that the long-term scheduler select a good process mix of I/O-bound and CPU-bound processes.
+It is important that the long-term scheduler select a good process mix of I/O-bound and CPU-bound processes.
 若全部是I/O-bound process,ready queue 会empty,short-term scheduler 没事做 
 全部是CPU-bound process ,I/O queue 会empty.
 分时系统可能只会有较少甚至没有的long-term scheduler而引入一种medium-term scheduler
