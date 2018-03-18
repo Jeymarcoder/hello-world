@@ -142,6 +142,117 @@ It is important that the long-term scheduler select a good process mix of I/O-bo
 definition:Switching the CPU to another process requires performing a state save of the current process and a state restore of a different process. This task is known as a context switch 
 交换速度取决于memory speed.
 highly dependent on hardware support.
+3.3 Operations on Processes
+1.systems must provide a mechanism for process creation and termination
+3.3.1 Process Creation
+父进程,子进程 can forming a tree of process
+process identifier (or pid): provides a unique value for each process in the system,作为内核访问属性的索引(index)
+
+子进程可直接利用操作系统的资源或者被强制只可使用部分父进程资源-->可以防止因为创建过多的子进程而导致整个操作系统因为过载而宕机
+3.3.2 Process Termination
+通常exit()的系统调用只能由要终止进程的父进程来调用以避免用户随意避免kill processes
+3.4 Interprocess Communication
+interprocess communication (IPC):shared memory and message passing /2 fundamental models
+就目前来说message passing 对性能的提升会更高,shared memory 受cache一致性的影响
+3.4.1 Shared memory
+producer–consumer problem Two types of buffers can be used.
+The unbounded buffer :即使consumer没消耗完,producer也可以一直生产
+The bounded buffer   :2种情况1)当没东西生产出来consumer要等
+                            2)当东西生产满了没被消耗producer 要等
+producer:
+while (true) {
+/* produce an item in next produced */
+while (((in + 1) % BUFFER SIZE) == out)
+;//即空间已满
+buffer[in] = next produced;
+in = (in + 1) % BUFFER SIZE;
+}
+consumer:
+while (true) {
+while (in == out)
+; /* do nothing */
+next consumed = buffer[out];
+out = (out + 1) % BUFFER SIZE;
+/* consume the item in next consumed */
+3.4.2 Message-Passing Systems
+ a communication link:
+ direct communication:
+ 1)需要交流时就自动建立了,但此类需了解identity
+ 2)连接在2个进程之间
+ 3)任意两对间都有连接
+ indirect communication:
+  received from mailboxes
+  1)只有有共享邮箱的进程才可建立连接
+  2)连接不再局限于2个进程间
+  3)每对进程可能会有多个邮箱来交流
+  If the mailbox is owned by a process (that is, the mailbox is part of the address space of the process), then we distinguish between the owner (which can only receive messages through this mailbox) and the user (which can only send messages to the mailbox). 
+3.4.2.2 Synchronization
+Blocking send:The sending process is blocked until the message is
+received by the receiving process or by the mailbox
+Blocking receive:The receiver blocks until a message is available.
+3.4.2.3 Buffering
+messages exchanged by communicating processes reside in a temporary queue.
+3 种实现方法:
+1)零容量:即发出者必须等接受者收到才可继续发.
+2)有界容量
+3)无界容量
+3.6 Communication in Client–Server Systems
+3.6.1 Sockets(LOW LEVEL 传递无组织的结构)
+all connections consist of a unique pair of sockets.
+146.86.5.20:1625----->ip:port
+
+127.0.0.1 is a special IP address known as the loopback 
+When a computer refers to IP address 127.0.0.1, it is referring to itself.
+This mechanism allows a client and server on the same host to communicate
+using the TCP/IP protocol.
+
+port让一个host可以提供多个网络服务通过不同的port
+3.6.2 Remote Procedure Calls
+Each message is addressed to an RPC daemon listening to a port on the remote system, and each contains an identifier specifying the function to execute and the parameters to pass to that function.
+XDR:客户端参数被convert  the machine-dependent data into XDR
+    服务端又转回来
+how does a client know the port numbers on the server?
+1:编译的时候在客户端已有RPC调用已经固定了端口
+2:matchmaker,发带有RPC名字的消息给matchmaker,他再提供port
+3.6.3 Pipes
+the producer writes to one end of the pipe (the write-end)
+the consumer reads from the other end (the read-end)
+3.6.3.1 Ordinary Pipes:
+单向的,只允许单向交流
+除了创建pip的进程外别的不可访问
+`
+if (pipe(fd) == -1) {
+fprintf(stderr,"Pipe failed");
+return 1;
+}/* fork a child process */
+pid = fork();
+if (pid < 0) { /* error occurred */
+fprintf(stderr, "Fork Failed");
+return 1;
+}if (pid > 0) { /* parent process */
+/* close the unused end of the pipe */
+close(fd[READ END]);
+/* write to the pipe */
+write(fd[WRITE END], write msg, strlen(write msg/* close the write end of the pipe */
+close(fd[WRITE END]);
+}else { /* child process */
+/* close the unused end of the pipe */
+close(fd[WRITE END]);
+/* read from the pipe */
+read(fd[READ END], read msg, BUFFER SIZE);
+printf("read %s",read msg);
+/* close the write end of the pipe */
+close(fd[READ END]);
+}return 0;
+}Figure 3.26 Figure 3.25, continued.
+`
+3.6.3.2 Named Pipes
+双向且无父子进程概念,但不能同时使用
+3.7 summary
+父子进程allowing concurrent execution: information sharing, computation speedup, modularity, and convenience
+
+
+
 
 
 
