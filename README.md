@@ -139,7 +139,8 @@ It is important that the long-term scheduler select a good process mix of I/O-bo
 分时系统可能只会有较少甚至没有的long-term scheduler而引入一种medium-term scheduler
 3.2.3 context switch
 中断产生时会将context存入pcb,不久后又取出执行
-definition:Switching the CPU to another process requires performing a state save of the current process and a state restore of a different process. This task is known as a context switch 
+definition:Switching the CPU to another process requires performing a state save of the current process and a state restore of a different process. This task is known as a context switch
+
 交换速度取决于memory speed.
 highly dependent on hardware support.
 3.3 Operations on Processes
@@ -251,7 +252,43 @@ close(fd[READ END]);
 3.7 summary
 父子进程allowing concurrent execution: information sharing, computation speedup, modularity, and convenience
 
-
+第四章 threads
+4.1
+线程是cpu优化的一个基本单元,包含线程id,pc,寄存器集,栈
+同个进程的多个线程共享代码段数据段和文件段
+多线程可合理利用多核心处理器的能力
+优点:
+1)响应性强
+2)同个进程的线程资源共享
+3)开辟线程比开辟进程经济实惠    
+4.2 多线程程序设计
+注意并行 parallelism 和同时 concurrent 的区别
+并行是多个任务并行执行
+同时只是把不同任务在时间片上分块分段跑起来
+现代操作系统一个核心支持两个线程
+编程需要写调度算法来实现利用多核心的并行运行
+数据并行性:同一份计算任务拆成多分同时计算
+任务并行性:完全不同的task去并跑
+4.3多线程的模式
+用户线程:不依赖于内核线程,在程序中实现,且内核线程不知道
+内核线程:由操作系统管理
+用户线程更易管理和创建因为无内核干涉
+1:多(用户线程)对一(内核线程)线程
+高效, 但任何一个用户线程造成系统阻塞调用,整个进程宕机
+此模式线程无法并行运行,一次只准一个线程访问内核
+2:一对一模式
+唯一缺点:一个用户线程就会开辟一个内核线程造成的开销性能损耗
+通常这种模式系统会限制一个最多的内核线程的数量
+Linux,Windows即这种
+3:多对多模式:
+一般是大量的用户线程对应少量内核线程
+理论上最好的模式
+既不会因内核线程少导致进程崩溃,也不会开辟过多线程的资源损失
+4.5隐式线程
+thread pools
+线程终结:
+1)一个线程去立即终结目标线程
+2)周期性的终结
 
 
 
