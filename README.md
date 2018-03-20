@@ -200,13 +200,11 @@ messages exchanged by communicating processes reside in a temporary queue.
 3.6 Communication in Client–Server Systems
 3.6.1 Sockets(LOW LEVEL 传递无组织的结构)
 all connections consist of a unique pair of sockets.
-146.86.5.20:1625----->ip:port
-
+146.86.5.20:1625----->ip:port  
 127.0.0.1 is a special IP address known as the loopback 
 When a computer refers to IP address 127.0.0.1, it is referring to itself.
 This mechanism allows a client and server on the same host to communicate
-using the TCP/IP protocol.
-
+using the TCP/IP protocol.  
 port让一个host可以提供多个网络服务通过不同的port
 3.6.2 Remote Procedure Calls
 Each message is addressed to an RPC daemon listening to a port on the remote system, and each contains an identifier specifying the function to execute and the parameters to pass to that function.
@@ -250,8 +248,7 @@ close(fd[READ END]);
 3.6.3.2 Named Pipes
 双向且无父子进程概念,但不能同时使用
 3.7 summary
-父子进程allowing concurrent execution: information sharing, computation speedup, modularity, and convenience
-
+父子进程allowing concurrent execution: information sharing, computation speedup, modularity, and convenience  
 第四章 threads
 4.1
 线程是cpu优化的一个基本单元,包含线程id,pc,寄存器集,栈
@@ -289,6 +286,129 @@ thread pools
 线程终结:
 1)一个线程去立即终结目标线程
 2)周期性的终结
+第六章 CPU scheduling
+1)ready queue is not a FIFO queue  
+6.1.3 Preemptive scheduling (抢占型调度)
+1)CPU调度只会出现在进程周期的:
+  a)从运行队列到终止
+  b)从运行队列到等待队列
+  c)等待队列到就绪队列
+  d)从运行队列到就绪队列  
+a和b是无抢占型调度,即轮到进程会让他一直跑完为止.  
+The dispatcher is the module that gives control of the CPUto the process selected
+by the short-term scheduler. This function involves the following:
+• Switching context
+• Switching to user mode
+• Jumping to the proper location in the user program to restart that program
+6.2 Scheduling Criteria(调度准则)
+选什么算法来调度要根据实际进程.
+调度效果有5个指标
+1)CPU 利用率
+2) Throughput(吞吐量)
+3)Turnaround time (周转时间):提交进程到进程完成的时间
+通常来说受到输出设备的速度限制
+4)waiting time (等待时延):即ready queue 里的进程进入运行队列所空闲的时间
+5)Response time(响应时间):即反馈给用户的时间,是开始可以reponse所需要的时间
+6.3 Scheduling Algorithms  
+6.3.1 First-Come, First-Served Scheduling(FCFS)
+直接使用队列即可(FIFO)在众多算法中会造成最大的等待时延
+convoy effect(车队效应):即当只有1个CPU绑定进程和多个I/O绑定进程时,CPU绑定进程会使一辆最大的车,而I/0绑定进程要使用CPU时必须全部等待CPU绑定进程处理完大事件,但是实际上I/O只有很小的事要处理.  
+并且,这个算法是 nonpreemptive,非抢占型.此类算法对分时系统影响最大.
+6.3.2 Shortest-Job-First Scheduling(SJF)
+  appropriate term for this scheduling method would be the shortest-next-CPU-burst algorithm
+此算法通常会给出最低的等待时延
+in a batch system is used frequently( in long-term scheduling(从队列中按顺序提交.)
+short-term CPU scheduling (从众多进程中选一个调入,即无法预测下一个cpu burst 的时长)
+即需要一个算法来预测下一个被调入CPU中执行的时长.
+Xn+1 = a tn + (1 − a)Xn.  X为预测时长
+既可以是抢占型也可以不是
+6.3.3 Priority Scheduling
+major problem :indefinite blocking, or starvation.
+因为优先级过低而一直被滞后
+solution:(called Aging) increasing the priority of processes that wait
+in the system for a long time.
+6.3.4 Round-Robin Scheduling(轮换调度)
+designed for time-sharing system
+use FIFO queue
+time slice, is defined.(时间片) sets a timer to interrupt after 1 time quantum, and dispatches the process.
+时间到了立即切换队列中的下一个进程
+被动preemptive,
+time quantum 太短造成大量的context switches.
+             太长了和FCFS就一样了
+一般来说大于80%的突发周期即可
+6.3.5 Multilevel Queue Scheduling
+foreground (interactive) processes and background (batch) processes. These two types of processes have different response-time requirements and so may have different scheduling needs. 
+ a multilevel queue scheduling algorithm with
+five queues, listed below in order of priority:
+1. System processes(最高优先级)
+2. Interactive processes
+3. Interactive editing processes
+4. Batch processes
+5. Student processes(最低优先级)
+No process in thebatch queue, for example, could run unless the queues for system processes,interactive processes, and interactive editing processes were all empty.
+优先级第一
+如果低级别的在running 时,有比他高优先级的入队,立即停止并执行.即抢占型
+6.3.6 Multilevel Feedback Queue Scheduling
+多级队列调度不允许更换队列而这个allows a process to move between queues.
+若某进程占据了过多的时间则可以把它调向低优先级队列
+同样若某进程等待过久也可以把它提到高优先级
+6.4 Thread Scheduling
+6.4.1 Contention Scope
+process-contention scope (PCS)
+the kernel uses system-contention scope (SCS)
+6.5 Multiple-Processor Scheduling
+SMP和AMP
+存在 high cost of invalidating and repopulating caches
+load balancing is typically necessary only on systems where each processor has its own private queue of eligible processes to execute.  
+
+###6.6Realtime CPU Scheduling
+Soft real-time systems: no guarantee as to when a critical real-time process will be scheduled;
+Hard real-time systems have stricter requirements. A task must be serviced by its deadline;  
+
+>Two types of latencies affect the performance of real-time systems:
+1. Interrupt latency:中断发生时处理现有信息(如context switch)所需要的时间  
+* 导致中断延迟的重要因素之一:内核数据结构更新时中断被禁止导致时延增长  
+2. Dispatch latency:the scheduling dispatcher stop one process and start another process  
+* main problems:
+1. Preemption of any process running in the kernel  
+2. Release by low-priority processes of resources needed by a high-priority process
+
+* solution:提供抢占型内核
+#第5章**进程同步**  
+cooperating process:_能影响别的进程也能被别的进程影响的进程_   
+>T0: producer execute register1 = counter {register1 = 5}
+>T1: producer execute register1 = register1 + 1 {register1 = 6}
+>T2: consumer execute register2 = counter {register2 = 5}
+>T3: consumer execute register2 = register2 − 1 {register2 = 4}
+>T4: producer execute counter = register1 {counter = 6}
+>T5: consumer execute counter = register2 {counter = 4}  
+按照counter++,counter--,本来counter==5但是由于出现进程交叠问题导致错误(data  concurrently)called race condition  
+ensure that only one process at a time can be manipulating the variable counter.  
+有share memory就会出现这种数据一致性问题  
+###*5.2 The Critical-Section Problem*: to design a protocol that the processes can use to cooperate.    
+* critical section:计算机中的每个进程的关键代码may be changing the common variables, updating a table so on 这段代码在系统中的重要特征就是no two processes are executing in their critical sections at the same time  
+   * entry section: 进程需要提出请求执行critical section的请求的实现followed by an exit section  
+   * remainder section:剩余代码
+* 3 requirements:
+   * Mutual exclusion : 即每次仅一个进程进入critical section
+   * Progress : 当没有进程执行critical section时必须要有进程补上进入
+   * Bounded waiting :要排队  
+Two general approaches are used to handle critical sections in operating systems: preemptive kernels and nonpreemptive kernels.  
+###5.3 Peterson’s Solution  
+```c++
+do {
+flag[i] = true;//当前进程i
+turn = j;//相对的另一个进程j
+while (flag[j] && turn == j);//若没发生交叠flag[j]=false则进入critical section,只要j进程没玩flag[j]=true
+critical section
+flag[i] = false;
+remainder section
+} while (true);
+```  
+
+
+
+
 
 
 
