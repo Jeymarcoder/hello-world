@@ -1,16 +1,16 @@
 Computer System Concepts
-
+`
 第一章
 最常见的多处理器设计是对称多处理 (smp) 特征是:所有处理器是对等关系P2P,运行完全独立于别的处理器
 
 集群系统：特殊形式的多处理器系统，通过局域网连接的多个计算机系统组成
 
-利用CPU:(multiprogramming)多程序
-管理让多个jobs同时位于内存来保证CPU总有job to do
+利用CPU:(multiprogramming)多程序  
+管理让多个jobs同时位于内存来保证CPU总有job to do  
 
-分时系统:multiprogramming的一种扩展,CPU使用调度算法不停替换jobs，造成job同时运行的幻觉
+分时系统:multiprogramming的一种扩展,CPU使用调度算法不停替换jobs，造成job同时运行的幻觉  
 
-为了阻止用户干扰系统正确的操作硬件有两种模式，用户态(mode)和内核态
+为了阻止用户干扰系统正确的操作硬件有两种模式，用户态(mode)和内核态  
 
 各种指令有特权只能在内核(kernel)态执行,操作系统所在的内存必须被保护以避免用户的不当修改
 timer避免无穷的循环
@@ -26,6 +26,7 @@ operating systems structures
 
 goals of system be well defined before the design begins
 
+`
 操作系统提供的常见服务:
 •用户界面: CLI (Command-line interface) , GUI
 •程序执行
@@ -38,6 +39,7 @@ goals of system be well defined before the design begins
 •Protection and security:当多个进程同时进行时,进程不应该能够干扰其余进程或者操作系统,应保证所有对系统资源的访问都是可控的
 
 
+`
 用户操作系统界面:
 shell 命令解释器
 有两种:
@@ -50,7 +52,7 @@ API(application programming interface):应用编程接口,由系统调用组成,
 1)可移植性
 2)工作量减少
 
-3种将参数传给操作系统的方式
+`3种将参数传给操作系统的方式
 1)直接给寄存器
 2)参数数量大于寄存器,将参数放在一个块或者TABLE中,把首地址存入寄存器,然后push入栈
 系统调用的类型:
@@ -74,6 +76,7 @@ systems, including UNIX, merge the two into a combined file–device structure.
 
 memory dump :可帮助软件开发人员和系统管理员诊断，识别和解决导致应用程序或系统故障的问题。
 
+`
 the operating system keeps information about all its processes, and system calls are used to access this information.
 System Programs:
 • File management. 
@@ -106,6 +109,7 @@ Linux also uses loadable kernel modules
 第三章
 process:
 
+`
 only one process can be running on any processor at any instant. Many
 processes may be ready and waiting
 Process Control Block:(进程控制块)
@@ -141,7 +145,7 @@ It is important that the long-term scheduler select a good process mix of I/O-bo
 中断产生时会将context存入pcb,不久后又取出执行
 definition:Switching the CPU to another process requires performing a state save of the current process and a state restore of a different process. This task is known as a context switch
 
-交换速度取决于memory speed.
+`交换速度取决于memory speed.
 highly dependent on hardware support.
 3.3 Operations on Processes
 1.systems must provide a mechanism for process creation and termination
@@ -149,7 +153,7 @@ highly dependent on hardware support.
 父进程,子进程 can forming a tree of process
 process identifier (or pid): provides a unique value for each process in the system,作为内核访问属性的索引(index)
 
-子进程可直接利用操作系统的资源或者被强制只可使用部分父进程资源-->可以防止因为创建过多的子进程而导致整个操作系统因为过载而宕机
+`子进程可直接利用操作系统的资源或者被强制只可使用部分父进程资源-->可以防止因为创建过多的子进程而导致整个操作系统因为过载而宕机
 3.3.2 Process Termination
 通常exit()的系统调用只能由要终止进程的父进程来调用以避免用户随意避免kill processes
 3.4 Interprocess Communication
@@ -160,7 +164,7 @@ producer–consumer problem Two types of buffers can be used.
 The unbounded buffer :即使consumer没消耗完,producer也可以一直生产
 The bounded buffer   :2种情况1)当没东西生产出来consumer要等
                             2)当东西生产满了没被消耗producer 要等
-producer:
+`producer:
 while (true) {
 /* produce an item in next produced */
 while (((in + 1) % BUFFER SIZE) == out)
@@ -218,8 +222,8 @@ the producer writes to one end of the pipe (the write-end)
 the consumer reads from the other end (the read-end)
 3.6.3.1 Ordinary Pipes:
 单向的,只允许单向交流
-除了创建pip的进程外别的不可访问
-`
+除了创建pip的进程外别的不可访问```  
+```c
 if (pipe(fd) == -1) {
 fprintf(stderr,"Pipe failed");
 return 1;
@@ -285,6 +289,7 @@ Linux,Windows即这种
 thread pools
 线程终结:
 1)一个线程去立即终结目标线程
+<<<<<<< HEAD
 2)周期性的终结
 第六章 CPU scheduling
 1)ready queue is not a FIFO queue  
@@ -405,11 +410,6 @@ flag[i] = false;
 remainder section
 } while (true);
 ```  
-
-
-
-
-
 
 
 
