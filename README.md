@@ -1,9 +1,9 @@
 Computer System Concepts
-`
-第一章
-最常见的多处理器设计是对称多处理 (smp) 特征是:所有处理器是对等关系P2P,运行完全独立于别的处理器
 
-集群系统：特殊形式的多处理器系统，通过局域网连接的多个计算机系统组成
+第一章
+最常见的多处理器设计是对称多处理 (smp) 特征是:所有处理器是对等关系P2P,运行完全独立于别的处理器  
+
+集群系统：特殊形式的多处理器系统，通过局域网连接的多个计算机系统组成  
 
 利用CPU:(multiprogramming)多程序  
 管理让多个jobs同时位于内存来保证CPU总有job to do  
@@ -13,20 +13,20 @@ Computer System Concepts
 为了阻止用户干扰系统正确的操作硬件有两种模式，用户态(mode)和内核态  
 
 各种指令有特权只能在内核(kernel)态执行,操作系统所在的内存必须被保护以避免用户的不当修改
-timer避免无穷的循环
+timer避免无穷的循环  
 
-分布式系统允许地理位置分散的主机通过计算机网络共享资源
+分布式系统允许地理位置分散的主机通过计算机网络共享资源  
 
-云计算不过是分布式系统的另一种称谓
+云计算不过是分布式系统的另一种称谓  
 
-实时操作系统应用于嵌入式环境
+实时操作系统应用于嵌入式环境  
 
 第二章
 operating systems structures
 
 goals of system be well defined before the design begins
 
-`
+
 操作系统提供的常见服务:
 •用户界面: CLI (Command-line interface) , GUI
 •程序执行
@@ -39,7 +39,7 @@ goals of system be well defined before the design begins
 •Protection and security:当多个进程同时进行时,进程不应该能够干扰其余进程或者操作系统,应保证所有对系统资源的访问都是可控的
 
 
-`
+
 用户操作系统界面:
 shell 命令解释器
 有两种:
@@ -52,7 +52,7 @@ API(application programming interface):应用编程接口,由系统调用组成,
 1)可移植性
 2)工作量减少
 
-`3种将参数传给操作系统的方式
+3种将参数传给操作系统的方式
 1)直接给寄存器
 2)参数数量大于寄存器,将参数放在一个块或者TABLE中,把首地址存入寄存器,然后push入栈
 系统调用的类型:
@@ -76,7 +76,7 @@ systems, including UNIX, merge the two into a combined file–device structure.
 
 memory dump :可帮助软件开发人员和系统管理员诊断，识别和解决导致应用程序或系统故障的问题。
 
-`
+
 the operating system keeps information about all its processes, and system calls are used to access this information.
 System Programs:
 • File management. 
@@ -109,7 +109,7 @@ Linux also uses loadable kernel modules
 第三章
 process:
 
-`
+
 only one process can be running on any processor at any instant. Many
 processes may be ready and waiting
 Process Control Block:(进程控制块)
@@ -145,7 +145,8 @@ It is important that the long-term scheduler select a good process mix of I/O-bo
 中断产生时会将context存入pcb,不久后又取出执行
 definition:Switching the CPU to another process requires performing a state save of the current process and a state restore of a different process. This task is known as a context switch
 
-`交换速度取决于memory speed.
+
+交换速度取决于memory speed.
 highly dependent on hardware support.
 3.3 Operations on Processes
 1.systems must provide a mechanism for process creation and termination
@@ -153,7 +154,7 @@ highly dependent on hardware support.
 父进程,子进程 can forming a tree of process
 process identifier (or pid): provides a unique value for each process in the system,作为内核访问属性的索引(index)
 
-`子进程可直接利用操作系统的资源或者被强制只可使用部分父进程资源-->可以防止因为创建过多的子进程而导致整个操作系统因为过载而宕机
+子进程可直接利用操作系统的资源或者被强制只可使用部分父进程资源-->可以防止因为创建过多的子进程而导致整个操作系统因为过载而宕机
 3.3.2 Process Termination
 通常exit()的系统调用只能由要终止进程的父进程来调用以避免用户随意避免kill processes
 3.4 Interprocess Communication
@@ -164,7 +165,10 @@ producer–consumer problem Two types of buffers can be used.
 The unbounded buffer :即使consumer没消耗完,producer也可以一直生产
 The bounded buffer   :2种情况1)当没东西生产出来consumer要等
                             2)当东西生产满了没被消耗producer 要等
-`producer:
+producer:
+
+```c
+
 while (true) {
 /* produce an item in next produced */
 while (((in + 1) % BUFFER SIZE) == out)
@@ -179,6 +183,9 @@ while (in == out)
 next consumed = buffer[out];
 out = (out + 1) % BUFFER SIZE;
 /* consume the item in next consumed */
+
+```
+
 3.4.2 Message-Passing Systems
  a communication link:
  direct communication:
@@ -222,8 +229,10 @@ the producer writes to one end of the pipe (the write-end)
 the consumer reads from the other end (the read-end)
 3.6.3.1 Ordinary Pipes:
 单向的,只允许单向交流
-除了创建pip的进程外别的不可访问```  
+除了创建pip的进程外别的不可访问  
+
 ```c
+
 if (pipe(fd) == -1) {
 fprintf(stderr,"Pipe failed");
 return 1;
@@ -248,7 +257,9 @@ printf("read %s",read msg);
 close(fd[READ END]);
 }return 0;
 }Figure 3.26 Figure 3.25, continued.
-`
+
+```
+
 3.6.3.2 Named Pipes
 双向且无父子进程概念,但不能同时使用
 3.7 summary
@@ -379,8 +390,8 @@ Hard real-time systems have stricter requirements. A task must be serviced by it
 2. Release by low-priority processes of resources needed by a high-priority process
 
 * solution:提供抢占型内核
-#第5章**进程同步**  
-cooperating process:_能影响别的进程也能被别的进程影响的进程_   
+#第5章**进程同步**
+cooperating process:_能影响别的进程也能被别的进程影响的进程_
 >T0: producer execute register1 = counter {register1 = 5}
 >T1: producer execute register1 = register1 + 1 {register1 = 6}
 >T2: consumer execute register2 = counter {register2 = 5}
@@ -391,7 +402,7 @@ cooperating process:_能影响别的进程也能被别的进程影响的进程_
 ensure that only one process at a time can be manipulating the variable counter.  
 有share memory就会出现这种数据一致性问题  
 ###*5.2 The Critical-Section Problem*: to design a protocol that the processes can use to cooperate.    
-* critical section:计算机中的每个进程的关键代码may be changing the common variables, updating a table so on 这段代码在系统中的重要特征就是no two processes are executing in their critical sections at the same time  
+* critical section:计算机中的每个进程的关键代码may be changing the common variables, updating a table so on 这段代码在系统中的重要特征就是no two processes are executing in their critical sections at the same time  又称临界区,是一个访问共用资源的程序片段,但共用资源区不支持被多进程(线程)访问.  
    * entry section: 进程需要提出请求执行critical section的请求的实现followed by an exit section  
    * remainder section:剩余代码
 * 3 requirements:
@@ -401,6 +412,7 @@ ensure that only one process at a time can be manipulating the variable counter.
 Two general approaches are used to handle critical sections in operating systems: preemptive kernels and nonpreemptive kernels.  
 ###5.3 Peterson’s Solution  
 ```c++
+
 do {
 flag[i] = true;//当前进程i
 turn = j;//相对的另一个进程j
@@ -409,7 +421,414 @@ critical section
 flag[i] = false;
 remainder section
 } while (true);
+
 ```  
 
+turn: 该轮到谁进入关键部分(critical section)
+flag: 谁已经准备好了进入critical section
+5.4 Synchronization Hardware
+###protecting critical regions through the use of locks
+one uninterruptible unit. We can use these special instructions to solve the critical-section problem
 
+```c
+
+*********************************
+boolean test and set(boolean *target) {
+boolean rv = *target;
+*target = true;
+return rv;
+*********************************
+do {
+while (test and set(&lock))
+; /* do nothing */
+/* critical section */
+lock = false;
+/* remainder section */
+} while (true);
+*********************************
+int compare and swap(int *value, int expected, int new value) {
+int temp = *value;
+if (*value == expected)
+*value = new value;
+return temp;
+}
+**********************************
+do {
+while (compare and swap(&lock, 0, 1) != 0)
+; /* do nothing */
+/* critical section */
+lock = 0;
+/* remainder section */
+} while (true);
+**********************************
+
+```
+
+以上2指令仅满足互斥要求满足不了排队要求
+so update test_and_set()
+```c
+
+*********************************
+do {
+waiting[i] = true;
+key = true;
+while (waiting[i] && key)
+key = test and set(&lock);
+waiting[i] = false;
+/* critical section */
+j = (i + 1) % n;
+while ((j != i) && !waiting[j])//开始扫描下一个准备好的进程
+j = (j + 1) % n;
+if (j == i)
+lock = false;
+else
+waiting[j] = false;
+/* remainder section */
+} while (true);
+*********************************
+
+```
+##5.5 Mutex(互斥) Locks(不是物理上的是software tools)
+process must acquire the lock before entering a critical section
+```c
+
+************************************
+acquire() {
+while (!available)
+; /* busy wait */
+available = false;;
+}
+*************************************
+release() {
+available = true;
+}
+**************************************
+do {
+acquire lock
+critical section
+release lock
+remainder section
+} while (true);
+***************************************
+
+```
+
+实现时会用到lock部分的硬件机制,主要实现缺点:busy waiting called  spinlock  wastes CPU Cycle
+                                    优点:no context switch
+5.6 Semaphores(信号量)
+variable integer S 2 ways :1)wait() 2)signal()
+
+```c++
+wait(S) {
+while (S <= 0)
+; // busy wait
+S--;
+signal(S) {
+S++;
+
+```
+
+且以上两个函数执行时被能被打断
+ ###5.6.1 Semaphore Usage: 
+Operating systems often distinguish between counting(没有范围) and binary semaphores(可用作mutex locks)
+当一个进程想使用资源时就执行wait(), 当一个进程释放资源signal()
+使用信号量解决各种各样的同步问题;
+如S1和S2 2 个进程且S2必须当S1执行后才可执行:
+1)在进程s1中插入语句: S1;
+                    Signal((synch));
+2)在进程s2中插入语句:wait(synch);
+                    S2;
+3)设置synch = 0;
+5.6.2 Semaphore Implementation
+为了克服busy waiting 问题,可以修改wait()函数,当一个进程调用wait时,去查找semaphore的值如果已被用完即把process block丢入一个与 semaphore 有关的队列中,然后控制权就被转入CPU Schduler,当有进程signal()时,应该restart被block的进程,然后扔进ready queue.
+
+```c
+//new design of Semaphore
+
+********************************
+
+typedef struct {
+int value;
+struct process *list;
+} semaphore;
+
+********************************
+
+wait(semaphore *S) {
+S->value--;
+if (S->value < 0) {
+add this process to S->list;
+block();//基础系统调用
+
+********************************
+
+signal(semaphore *S) {
+S->value++;
+if (S->value <= 0) {
+remove a process P from S->list;
+wakeup(P); //restart process P 系统调用
+
+******************************
+```
+
+list of waiting processes 可轻易通过在PCB中链接字段实现实现
+Each semaphore contains an integer value and a pointer to a list of PCBs.
+多处理器必须禁止进程中断
+ps:busy waiting并非被解决而是转入critical section, 又因为通常这部分指令都很少所以很少会发生busy waiting problems;
+5.6.3 Deadlocks and Starvation
+当无限期等待发生时这部分processes就被称作deadlock
+设S,Q都被初始化为1
+>P0        P1
+>wait(S); wait(Q);
+>wait(Q); wait(S);
+      .       .
+      .       .
+      .       .
+>signal(S); signal(Q);
+>signal(Q); signal(S);
+如上两个进程相互等待陷入僵局.
+Another problem related to deadlocks is indefinite blocking(LILO Queue) or starvation
+5.6.4 Priority Inversion
+当一个高级别进程想要修改一个正在被低级别进程访问的内核数据时,通常内核会被一个lock保护然后高级别的进程必须等待直至低级别进程使用完成
+priority inversion. It occurs only in systems with more than two priorities.如L,M,H 3个级别的进程.当L在访问R资源时H想访问R就进入等待,但此时M启动,他不使用R但是他的高优先级抢占了L,L就挂起了,但H还是在等待L用完R,因此间接影响了H的等待时长.???
+solution:priority-inheritance protocol. 
+implemention:
+如例子中当L访问R资源时,H也要访问R资源,因此L暂时性的继承H的优先级,当L访问完成就恢复L的优先级
+5.7 Classic Problems of Synchronization
+5.7.1 The Bounded-Buffer Problem:
+
+```c
+
+*********************
+/* producer */
+*********************
+do {
+...
+/* produce an item in next produced */
+...
+wait(empty);
+wait(mutex);
+...
+/* add next produced to the buffer */
+...
+signal(mutex);
+signal(full);
+} while (true);
+***********************
+
+int n;
+semaphore mutex = 1;
+semaphore empty = n;
+semaphore full = 0
+
+*********************
+/*consumer*/
+do {
+wait(full);
+wait(mutex);
+...
+/* remove an item from buffer to next consumed */
+...
+signal(mutex);
+signal(empty);
+...
+/* consume the item in next consumed */
+...
+} while (true);
+************************
+
+```
+
+变量empty是用生产者生产时看还有多少空位(最开始为n即没有进程进入)
+变量full是用消费者看有多少进程完成后离开
+5.7.2 The Readers Writers Problem
+read database call reader
+update database call writer
+当多个进程同时read没有问题,但当writer和别的任意进程同时访问database时就有chaos.
+2个经典的solution:
+1)没有reader会等待除非writer获得了permission来操作shared object
+可能会导致writer一直等待
+2)没有new reader会开始reading 当有writer在等待进入shared object时
+可能会导致reader一直等待
+
+```c
+
+*************************
+semaphore rw_mutex = 1;
+semaphore mutex = 1;
+int read count = 0;
+*************************
+/*writer structure*/
+do {
+wait(rw_mutex);
+...
+/* writing is performed */
+...
+signal(rw_mutex);
+} while (true);
+
+**********************
+/*reader structure*/
+do {
+wait(mutex);
+read count++;
+if (read count == 1)     //???
+wait(rw_mutex);
+signal(mutex);
+...
+/* reading is performed */
+...
+wait(mutex);
+read count--;
+if (read_count == 0)
+signal(rw_mutex);
+signal(mutex);
+} while (true);
+*****************************
+
+```
+适用于readers 比 writers多的应用和容易区分进程only read和only write 的应用
+5.7.3 The Dining-Philosophers Problem
+每个哲学家一次只能拿起一根筷子,但吃饭要两根筷子.
+one simple solutino: make every chopstick a  semaphore.
+
+```c
+*******************************
+semaphore chopstick[5];//均初始化为1
+do {
+wait(chopstick[i]);
+wait(chopstick[(i+1) % 5]);
+...
+/* eat for awhile */
+...
+signal(chopstick[i]);
+signal(chopstick[(i+1) % 5]);
+...
+/* think for awhile */
+...
+} while (true);
+*********************************
+```
+nevertheless(然而),这会造成deadlock,如果5个哲学家同时饿了,都拿起了左手边的筷子,那么,所有人都会等待右手去拿筷子,陷入deadlock.
+Several possible remedies(补救措施):
+1:最多允许4个人同时坐在桌上
+2:Allow a philosopher to pick up her chopsticks only if both chopsticks are available
+3:定义座位奇数(odd number)的先拿左手,偶数(even number)的先拿右手.
+beter solution还应该防范饥饿问题
+
+
+5.8 Monitors
+ semaphores 易造成timing errors(主要因为编程时wait()和signal()调用错误会引发严重后果)
+ so introduce the high-level synchronization construct—the monitor type .
+
+```c++
+******************************
+monitor monitor name
+{/* shared variable declarations */
+function P1(...) {
+...
+}function P2(...) {
+...
+}...function Pn(...) {
+...
+}initialization code (...) {
+...
+}
+}
+*******************************
+```
+
+The monitor construct ensures that only one process at a time is active
+within the monitor.
+monitor 中的函数只能访问monitor内部的变量和正式参数
+编写一个含有wait和signal的类condition
+for example;
+when the x.signal() operation is invoked by a process P, there exists a suspended process(暂停进程) Q associated with condition x. Clearly, if the suspended process Q is allowed to resume(继续) its execution, the signaling process P must wait.
+conceptually both processes can continue with their execution,2个方案:
+1. Signal and wait. P either waits until Q leaves the monitor or waits for
+another condition.
+2. Signal and continue. Q either waits until P leaves the monitor or waits
+for another conditio
+
+5.8.2 Dining-Philosophers Solution Using Monitors
+imposes(施加) the restriction:
+philosopher may pick up her chopsticks only if both of them are available.
+
+```java
+
+****************************************
+monitor DiningPhilosophers
+{
+  enum {THINKING, HUNGRY, EATING} state[5];
+  condition self[5];
+  void pickup(int i) {
+  state[i] = HUNGRY;
+  test(i);
+  if (state[i] != EATING)
+  self[i].wait();//进入waiting
+  }
+  void putdown(int i) {
+  state[i] = THINKING;
+  test((i + 4) % 5);
+  test((i + 1) % 5);
+  }
+  void test(int i) {
+  if ((state[(i + 4) % 5] != EATING) &&(state[i] == HUNGRY) &&(state[(i + 1) % 5] != EATING)) {
+  state[i] = EATING;
+  self[i].signal();
+    } 
+  }
+  initialization code() {
+  for (int i = 0; i < 5; i++)
+  state[i] = THINKING;
+  }
+}
+*****************************************
+```
+
+由于新增的限制所以:
+i can set the variable state[i] = EATING only if her two neighbors are not eating: (state[(i+4) % 5] != EATING) and (state[(i+1) % 5] != EATING).
+以上实现还是有可能造成饥饿.
+   *                        *<---
+ *<-  *<-                *     * 
+  * *                     *<- *
+如上2对交替eating造成剩余的那个一直饥饿
+5.8.3 Implementing a Monitor Using Semaphores
+external function F
+
+```c++
+int next  = 0;
+semaphore  mutex = 1;
+semaphore  x_sem = 0;
+int x_count = 0;//count the number of processes suspended on next
+int next_count = 0;
+int main(){ 
+  wait(mutex);
+...
+  body of F
+...
+  if (next_count > 0)
+  signal(next);
+  else
+  signal(mutex);
+}
+wait(){
+x_count++;
+if (next_count > 0)
+signal(next);
+else
+signal(mutex);
+wait(x_sem);
+x_count--;
+}
+signal(){
+  if (x_count > 0) {
+  next_count++;
+  signal(x_sem);
+  wait(next);
+  next_count--;
+  }
+}
+//??????
+5.8.4 Resuming Processes within a Monitor
 
